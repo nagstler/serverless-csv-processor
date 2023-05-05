@@ -64,7 +64,7 @@ GOOS=linux GOARCH=amd64 go build -o main main.go
 3. Once the CSV file is uploaded, the Lambda function will be triggered automatically, processing the CSV and pushing the records to the specified SQS queue.
 ## Deployment
 
-1. **AWS Management Console:** 
+**AWS Management Console:** 
 You can manually create and configure the necessary AWS resources through the AWS Management Console:
 - Create an S3 bucket to store your CSV files and the configuration file.
 - Create an SQS queue to receive the parsed CSV records. 
@@ -72,15 +72,6 @@ You can manually create and configure the necessary AWS resources through the AW
 - Create a Lambda function, set the runtime to "Go", and upload the compiled binary.
 - In the Lambda function configuration, add an S3 trigger with the appropriate event type (e.g., "ObjectCreated"), and specify the S3 bucket you created earlier.
 - Configure the necessary IAM roles and permissions for Lambda, S3, and SQS. 
-2. **AWS CLI:** 
-You can use the AWS Command Line Interface (CLI) to create and configure AWS resources by running commands in your terminal: 
-- Compile your `main.go` file to create the Lambda binary.
-- Create a .zip file containing the compiled binary. 
-- Use `aws s3api` commands to create the S3 bucket and upload the configuration file. 
-- Use `aws sqs` commands to create the SQS queue. 
-- Use `aws lambda` commands to create the Lambda function, set the runtime to "Go", and upload the .zip file containing the compiled binary. 
-- Use `aws lambda` and `aws s3api` commands to add an S3 trigger to the Lambda function. 
-- Configure the necessary IAM roles and permissions using `aws iam` commands.
 
 There are multiple ways to deploy the serverless CSV processor to AWS. Refer to the [AWS Lambda Deployment](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html)  documentation for a detailed guide on deployment methods.
 
