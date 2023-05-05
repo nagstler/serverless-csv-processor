@@ -49,11 +49,13 @@ func processRows(config *Config, rows chan map[string]string, wg *sync.WaitGroup
 }
 
 func handleS3Event(s3Event events.S3Event) error {
+	log.Println("Lambda function triggered by S3 event")
 	sess := session.Must(session.NewSession())
 	downloader := s3manager.NewDownloader(sess)
 	s3Client := s3.New(sess)
 
 	for _, record := range s3Event.Records {
+		log.Printf("Processing record: %+v", record)
 		bucket := record.S3.Bucket.Name
 		key := record.S3.Object.Key
 
@@ -90,6 +92,8 @@ func handleS3Event(s3Event events.S3Event) error {
 		if err != nil {
 			log.Fatalf("Unable to download CSV file: %v", err)
 		}
+
+		log.Printf("Processing file: %s", key)
 
 		csvFile.Seek(0, 0)
 		reader := csv.NewReader(csvFile)
