@@ -1,5 +1,5 @@
 # Serverless CSV Processor
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Go CI Build](https://github.com/nagstler/serverless-csv-processor/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/nagstler/serverless-csv-processor/actions/workflows/main.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/b840499e1cc06363e584/maintainability)](https://codeclimate.com/github/nagstler/serverless-csv-processor/maintainability)
 
 ServerlessCSVProcessor is a serverless application that processes large CSV files stored in an Amazon S3 bucket, maps the headers according to a configuration file, and pushes the records to an Amazon SQS queue. This project is built using AWS Lambda and is written in Golang.
 ## Features
