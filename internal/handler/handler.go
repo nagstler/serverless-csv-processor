@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"encoding/csv"
+	encCSV "encoding/csv" // Rename the import
 	"log"
 	"os"
 
@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/nagstler/serverless-csv-processor/internal/config"
-	"github.com/nagstler/serverless-csv-processor/internal/csv"
+	csvpkg "github.com/nagstler/serverless-csv-processor/internal/csv" // Use import alias
 )
 
 func HandleS3Event(s3Event events.S3Event) error {
@@ -58,8 +58,8 @@ func HandleS3Event(s3Event events.S3Event) error {
 		log.Printf("Processing file: %s", key)
 
 		csvFile.Seek(0, 0)
-		reader := csv.NewReader(csvFile)
-		csv.ReadCSV(reader, cfg)
+		reader := encCSV.NewReader(csvFile) // Use the renamed import
+		csvpkg.ReadCSV(reader, cfg)         // Use the import alias
 	}
 
 	return nil
