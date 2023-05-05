@@ -11,6 +11,39 @@ ServerlessCSVProcessor is a serverless application that processes large CSV file
 - AWS CLI
 - AWS account with access to Lambda, S3, and SQS services 
 - [aws-lambda-go](https://github.com/aws/aws-lambda-go)  package
+
+## Project Structure
+
+The project is organized into the following directory structure and files:
+
+```go
+
+serverless-csv-processor/
+├── cmd/
+│   └── lambda/
+│       └── main.go
+├── internal/
+│   ├── config/
+│   │   └── config.go
+│   ├── csv/
+│   │   └── csv.go
+│   ├── handler/
+│   │   └── handler.go
+│   └── sqs/
+│       └── sqs.go
+└── go.mod
+```
+
+
+### Overview 
+- `cmd/lambda/main.go`: This is the entry point for the AWS Lambda function. It imports the `handler` package and starts the Lambda function with the `HandleS3Event` function. 
+- `internal/`: This directory contains the internal packages that implement the core functionality of the Lambda function. 
+- `config/`: This package handles the parsing and loading of the configuration file from the S3 bucket. It contains the `config.go` file which defines the `Config` struct and provides the `LoadConfig` function. 
+- `csv/`: This package is responsible for processing CSV files. It contains the `csv.go` file, which provides functions for reading CSV files from S3, parsing them, and applying the header mapping from the configuration file. 
+- `handler/`: This package contains the `handler.go` file, which implements the main `HandleS3Event` function that is triggered by the S3 event. It uses the other internal packages to download and parse the configuration file, process the CSV file, and send the data to an SQS queue. 
+- `sqs/`: This package is responsible for sending data to an SQS queue. It contains the `sqs.go` file, which provides the `ProcessRows` function that sends each row from the processed CSV file to the specified SQS queue. 
+- `go.mod`: This file defines the Go module and its dependencies.
+
 ## Getting Started 
 1. Clone the repository to your local machine.
 
