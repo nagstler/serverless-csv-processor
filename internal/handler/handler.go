@@ -2,6 +2,7 @@ package handler
 
 import (
 	encCSV "encoding/csv" // Rename the import
+	"fmt"
 	"log"
 	"os"
 
@@ -24,6 +25,10 @@ func HandleS3Event(s3Event events.S3Event) error {
 		log.Printf("Processing record: %+v", record)
 		bucket := record.S3.Bucket.Name
 		key := record.S3.Object.Key
+
+		if key == "config.json" {
+			continue
+		}
 
 		// Download and parse the configuration file
 		configObj, err := s3Client.GetObject(&s3.GetObjectInput{
@@ -60,7 +65,37 @@ func HandleS3Event(s3Event events.S3Event) error {
 		csvFile.Seek(0, 0)
 		reader := encCSV.NewReader(csvFile) // Use the renamed import
 		csvpkg.ReadCSV(reader, cfg)         // Use the import alias
+
+		// Move the processed file to the archive folder
+		err = moveToArchive(s3Client, bucket, key, cfg.ArchiveFolder)
+		if err != nil {
+			log.Printf("Error archiving file: %v", err)
+		}
 	}
 
+	return nil
+}
+
+func moveToArchive(s3Client *s3.S3, bucket, key, archiveFolder string) error {
+	archiveKey := fmt.Sprintf("%s/%s", archiveFolder, key)
+	_, err := s3Client.CopyObject(&s3.CopyObjectInput{
+		Bucket:     aws.String(bucket),
+		CopySource: aws.String(fmt.Sprintf("%s/%s", bucket, key)),
+		Key:        aws.String(archiveKey),
+	})
+	if err != nil {
+		return fmt.Errorf("unable to move processed file to archive folder: %v", err)
+	}
+
+	// Delete the original file after copying
+	_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return fmt.Errorf("unable to delete original file after archiving: %v", err)
+	}
+
+	log.Printf("File archived: %s", archiveKey)
 	return nil
 }

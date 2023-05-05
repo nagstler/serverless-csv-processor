@@ -9,6 +9,7 @@ import (
 type Config struct {
 	HeaderMapping map[string]string `json:"header_mapping"`
 	SQSQueueURL   string            `json:"sqs_queue_url"`
+	ArchiveFolder string            `json:"archive_folder"`
 }
 
 func LoadConfig(reader io.Reader) (*Config, error) {

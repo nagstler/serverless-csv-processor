@@ -1,11 +1,15 @@
 # Serverless CSV Processor
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Go CI Build](https://github.com/nagstler/serverless-csv-processor/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/nagstler/serverless-csv-processor/actions/workflows/main.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/b840499e1cc06363e584/maintainability)](https://codeclimate.com/github/nagstler/serverless-csv-processor/maintainability)
 
-ServerlessCSVProcessor is a serverless application that processes large CSV files stored in an Amazon S3 bucket, maps the headers according to a configuration file, and pushes the records to an Amazon SQS queue. This project is built using AWS Lambda and is written in Golang.
+Serverless CSV-Processor is a serverless application that processes large CSV files stored in an Amazon S3 bucket, maps the headers according to a configuration file, and pushes the records to an Amazon SQS queue. This project is built using AWS Lambda and is written in Golang.
 ## Features
-- Efficient processing of large CSV files using concurrent workers
-- Customizable header mapping through a JSON configuration file
 - Triggered automatically when a new CSV file is uploaded to the S3 bucket
+- Processes large CSV files without loading the entire file into memory
+- Efficient processing using concurrent workers
+- Maps CSV headers to desired output format using a configuration file
+- Pushes processed records to an Amazon SQS queue for further processing
+- Moves processed CSV files to an archive folder specified in the configuration file
+
 ## Prerequisites
 - Go 1.11 or later
 - AWS CLI
@@ -33,7 +37,6 @@ serverless-csv-processor/
 │       └── sqs.go
 └── go.mod
 ```
-
 
 ### Overview 
 - `cmd/lambda/main.go`: This is the entry point for the AWS Lambda function. It imports the `handler` package and starts the Lambda function with the `HandleS3Event` function. 
@@ -91,10 +94,12 @@ GOOS=linux GOARCH=amd64 go build -o main main.go
         "OriginalHeader1": "MappedHeader1",
         "OriginalHeader2": "MappedHeader2"
     },
-    "sqs_queue_url": "https://sqs.region.amazonaws.com/your-account-id/your-queue-name"
+    "sqs_queue_url": "https://sqs.region.amazonaws.com/your-account-id/your-queue-name",
+    "archive_folder": "archive/2023"
 }
 ``` 
 3. Once the CSV file is uploaded, the Lambda function will be triggered automatically, processing the CSV and pushing the records to the specified SQS queue.
+
 ## Deployment
 
 **AWS Management Console:** 
