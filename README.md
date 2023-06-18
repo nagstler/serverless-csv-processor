@@ -119,4 +119,4 @@ There are multiple ways to deploy the serverless CSV processor to AWS. Refer to 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
